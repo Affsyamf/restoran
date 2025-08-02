@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
@@ -31,7 +32,21 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama_menu' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'required|numeric|min:0',
+            'kategori' => 'required|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            $imagePath = $request->file('gambar')->store('images', 'public');
+            $validated['gambar'] = $imagePath;
+        }
+        
+        Menu::create($validated);
+        return redirect()->route('admin.menus.index')->with('success', 'Menu created successfully.');
     }
 
     /**
@@ -39,7 +54,7 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        //
+        return view('menus.show', ['menu' => $menu]);
     }
 
     /**
@@ -47,7 +62,7 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        //
+        return view('menus.edit', ['menu' => $menu]);
     }
 
     /**
@@ -55,7 +70,21 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
-        //
+        $validated = $request->validate([
+            'nama_menu' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'required|numeric|min:0',
+            'kategori' => 'required|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            $imagePath = $request->file('gambar')->store('images', 'public');
+            $validated['gambar'] = $imagePath;
+        }
+        
+        $menu->update($validated);
+        return redirect()->route('admin.menus.index')->with('success', 'Menu updated successfully.');
     }
 
     /**
@@ -63,6 +92,10 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        //
+        if ($menu->gambar) {
+            Storage::disk('public')->delete($menu->gambar);
+        }
+        $menu->delete();
+        return redirect()->route('admin.menus.index')->with('success', 'Menu deleted successfully.');
     }
 }

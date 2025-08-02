@@ -22,6 +22,9 @@
                         Manajemen Menu
                     </a>
                     {{-- Tambahkan link sidebar lain di sini --}}
+                    <a href="{{ route('admin.users.index') }}" class="mt-1 flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
+                        Manajemen User
+                    </a>
                 </nav>
             </div>
         </div>
