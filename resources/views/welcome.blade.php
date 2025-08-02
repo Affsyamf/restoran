@@ -38,13 +38,14 @@
     </section>
 
     {{-- BAGIAN MENU UNGGULAN --}}
-    <section id="menu" class="bg-gray-100 py-16">
+   <section id="menu" class="bg-gray-100 py-16">
         <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
             <h2 class="text-center text-3xl font-bold sm:text-4xl mb-12">Menu Unggulan Kami</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 @forelse ($featuredMenus as $menu)
-                    <div class="block rounded-lg p-4 shadow-sm shadow-indigo-100 bg-white">
-                        <img alt="Menu" src="https://placehold.co/400x300/CCCCCC/FFFFFF?text={{ urlencode($menu->nama_menu) }}" class="h-56 w-full rounded-md object-cover" />
+                    {{-- Setiap kartu sekarang adalah link ke halaman detail --}}
+                    <a href="{{ route('menu.show', $menu) }}" class="group block rounded-lg p-4 shadow-sm shadow-indigo-100 bg-white transition hover:shadow-lg">
+                        <img alt="Menu" src="{{ $menu->gambar ? asset('storage/' . $menu->gambar) : 'https://placehold.co/400x300/CCCCCC/FFFFFF?text=' . urlencode($menu->nama_menu) }}" class="h-56 w-full rounded-md object-cover" />
                         <div class="mt-2">
                             <dl>
                                 <div>
@@ -53,15 +54,22 @@
                                 </div>
                                 <div>
                                     <dt class="sr-only">Nama Menu</dt>
-                                    <dd class="font-medium">{{ $menu->nama_menu }}</dd>
+                                    <dd class="font-medium group-hover:text-teal-600">{{ $menu->nama_menu }}</dd>
                                 </div>
                             </dl>
                             <p class="text-xs text-gray-600 mt-2">{{ Str::limit($menu->deskripsi, 50) }}</p>
                         </div>
-                    </div>
+                    </a>
                 @empty
                     <p class="col-span-4 text-center text-gray-500">Menu unggulan akan segera hadir!</p>
                 @endforelse
+            </div>
+            
+            {{-- TOMBOL BARU: Lihat Semua Menu --}}
+            <div class="mt-12 text-center">
+                <a href="{{ route('menu.index') }}" class="inline-block rounded bg-teal-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-teal-700 focus:outline-none focus:ring focus:ring-yellow-400">
+                    Lihat Semua Menu
+                </a>
             </div>
         </div>
     </section>

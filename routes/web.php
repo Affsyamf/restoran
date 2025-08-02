@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Menu;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -36,4 +37,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Nama lengkap route ini sekarang adalah 'admin.dashboard'
 });
 
+//route user
+Route::get('/menu', [CartController::class, 'index'])->name('menu.index');
+
+// Route untuk menambahkan item ke keranjang (hanya untuk user yang sudah login)
+Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
+// Route untuk menampilkan halaman menu kepada semua pengunjung
+    Route::get('/menu', [CartController::class, 'index'])->name('menu.index');
+
+    // ROUTE BARU: Untuk menampilkan detail satu menu
+    Route::get('/menu/{menu}', [MenuController::class, 'show'])->name('menu.show');
+
+    // Route untuk menambahkan item ke keranjang (hanya untuk user yang sudah login)
+    Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
 require __DIR__.'/auth.php';

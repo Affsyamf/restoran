@@ -23,9 +23,9 @@
                 <div class="md:flex md:items-center md:gap-12">
                     <nav aria-label="Global" class="hidden md:block">
                         <ul class="flex items-center gap-6 text-sm">
-                            <li><a class="text-gray-500 transition hover:text-gray-500/75" href="#about">Tentang Kami</a></li>
-                            <li><a class="text-gray-500 transition hover:text-gray-500/75" href="#menu">Menu</a></li>
-                            <li><a class="text-gray-500 transition hover:text-gray-500/75" href="#contact">Kontak</a></li>
+                            <li><a class="text-gray-500 transition hover:text-gray-500/75" href="/#about">Tentang Kami</a></li>
+                            <li><a class="text-gray-500 transition hover:text-gray-500/75" href="{{ route('menu.index') }}">Menu</a></li>
+                            <li><a class="text-gray-500 transition hover:text-gray-500/75" href="/#contact">Kontak</a></li>
                         </ul>
                     </nav>
 
