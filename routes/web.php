@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Menu;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\OrderController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('menus', MenuController::class);
     Route::resource('users', UserController::class);
+    Route::resource('orders', OrderController::class);
     // Nama lengkap route ini sekarang adalah 'admin.dashboard'
 });
 

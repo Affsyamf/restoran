@@ -2,7 +2,7 @@
 <html lang="en" class="h-full bg-gray-100">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <title>Admin Panel - Restoran Enak</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -21,9 +21,12 @@
                     <a href="{{ route('admin.menus.index') }}" class="mt-1 flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
                         Manajemen Menu
                     </a>
-                    {{-- Tambahkan link sidebar lain di sini --}}
                     <a href="{{ route('admin.users.index') }}" class="mt-1 flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
                         Manajemen User
+                    </a>
+                    {{-- LINK BARU: Manajemen Pesanan --}}
+                    <a href="{{ route('admin.orders.index') }}" class="mt-1 flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
+                        Manajemen Pesanan
                     </a>
                 </nav>
             </div>
