@@ -3,10 +3,15 @@
         <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
             <h1 class="text-3xl font-bold tracking-tight text-gray-900">Keranjang Belanja</h1>
 
-            {{-- Notifikasi Sukses --}}
+            {{-- Notifikasi --}}
             @if (session('success'))
                 <div class="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
             @endif
 
@@ -67,7 +72,11 @@
                             </dl>
 
                             <div class="mt-6">
-                                <button type="submit" class="w-full rounded-md border border-transparent bg-teal-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-50">Checkout</button>
+                                {{-- Tombol Checkout sekarang adalah form --}}
+                                <form action="{{ route('checkout.store') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full rounded-md border border-transparent bg-teal-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-50">Checkout</button>
+                                </form>
                             </div>
                         </div>
                     </section>

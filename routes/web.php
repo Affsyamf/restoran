@@ -8,7 +8,8 @@ use App\Models\Menu;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
- use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\UserOrderController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -62,4 +63,8 @@ Route::get('/cart', [CartController::class, 'show'])->middleware('auth')->name('
 Route::delete('/cart/remove/{menu}', [CartController::class, 'destroy'])->middleware('auth')->name('cart.destroy');
 // ROUTE BARU: Memproses checkout dan menyimpan pesanan
 Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('auth')->name('checkout.store');
+// ROUTE BARU: Menampilkan riwayat pesanan untuk user yang login
+Route::get('/my-orders', [UserOrderController::class, 'index'])->middleware('auth')->name('my-orders.index');
+
+
 require __DIR__.'/auth.php';
