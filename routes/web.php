@@ -8,6 +8,7 @@ use App\Models\Menu;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
+ use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -43,11 +44,22 @@ Route::get('/menu', [CartController::class, 'index'])->name('menu.index');
 // Route untuk menambahkan item ke keranjang (hanya untuk user yang sudah login)
 Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
 // Route untuk menampilkan halaman menu kepada semua pengunjung
-    Route::get('/menu', [CartController::class, 'index'])->name('menu.index');
+Route::get('/menu', [CartController::class, 'index'])->name('menu.index');
 
-    // ROUTE BARU: Untuk menampilkan detail satu menu
-    Route::get('/menu/{menu}', [MenuController::class, 'show'])->name('menu.show');
+// ROUTE BARU: Untuk menampilkan detail satu menu
+ Route::get('/menu/{menu}', [MenuController::class, 'show'])->name('menu.show');
 
-    // Route untuk menambahkan item ke keranjang (hanya untuk user yang sudah login)
-    Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
+// Route untuk menambahkan item ke keranjang (hanya untuk user yang sudah login)
+Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
+
+// Route untuk menambahkan item ke keranjang
+Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
+
+// ROUTE BARU: Menampilkan halaman keranjang belanja
+Route::get('/cart', [CartController::class, 'show'])->middleware('auth')->name('cart.show');
+
+// ROUTE BARU: Menghapus item dari keranjang
+Route::delete('/cart/remove/{menu}', [CartController::class, 'destroy'])->middleware('auth')->name('cart.destroy');
+// ROUTE BARU: Memproses checkout dan menyimpan pesanan
+Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('auth')->name('checkout.store');
 require __DIR__.'/auth.php';

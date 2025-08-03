@@ -21,15 +21,11 @@ class CartController extends Controller
      */
     public function store(Request $request, Menu $menu)
     {
-        // 1. Ambil keranjang yang ada dari session, atau buat array kosong jika belum ada
         $cart = $request->session()->get('cart', []);
 
-        // 2. Cek apakah menu sudah ada di keranjang
         if (isset($cart[$menu->id])) {
-            // Jika sudah ada, tambahkan jumlahnya
             $cart[$menu->id]['jumlah']++;
         } else {
-            // Jika belum ada, tambahkan sebagai item baru
             $cart[$menu->id] = [
                 "nama_menu" => $menu->nama_menu,
                 "jumlah" => 1,
@@ -38,10 +34,34 @@ class CartController extends Controller
             ];
         }
 
-        // 3. Simpan kembali keranjang yang sudah diperbarui ke dalam session
         $request->session()->put('cart', $cart);
 
-        // 4. Redirect kembali ke halaman menu dengan pesan sukses
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan ke keranjang!');
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Menu berhasil ditambahkan ke keranjang!');
+    }
+
+    /**
+     * Menampilkan halaman keranjang belanja.
+     */
+    public function show(Request $request)
+    {
+        $cart = $request->session()->get('cart', []);
+        return view('cart.index', ['cart' => $cart]);
+    }
+
+    /**
+     * Menghapus item dari keranjang.
+     */
+    public function destroy(Request $request, Menu $menu)
+    {
+        $cart = $request->session()->get('cart', []);
+
+        if (isset($cart[$menu->id])) {
+            unset($cart[$menu->id]);
+        }
+
+        $request->session()->put('cart', $cart);
+
+        return redirect()->route('cart.show')->with('success', 'Item berhasil dihapus dari keranjang.');
     }
 }
