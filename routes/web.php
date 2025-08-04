@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -48,7 +49,7 @@ Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('a
 Route::get('/menu', [CartController::class, 'index'])->name('menu.index');
 
 // ROUTE BARU: Untuk menampilkan detail satu menu
- Route::get('/menu/{menu}', [MenuController::class, 'show'])->name('menu.show');
+Route::get('/menu/{menu}', [MenuController::class, 'show'])->name('menu.show');
 
 // Route untuk menambahkan item ke keranjang (hanya untuk user yang sudah login)
 Route::post('/cart/add/{menu}', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
@@ -65,6 +66,11 @@ Route::delete('/cart/remove/{menu}', [CartController::class, 'destroy'])->middle
 Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('auth')->name('checkout.store');
 // ROUTE BARU: Menampilkan riwayat pesanan untuk user yang login
 Route::get('/my-orders', [UserOrderController::class, 'index'])->middleware('auth')->name('my-orders.index');
+
+// ROUTE BARU: Menyimpan ulasan baru dari pengguna
+Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
+
+
 
 
 require __DIR__.'/auth.php';
