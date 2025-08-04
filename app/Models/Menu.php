@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
@@ -17,4 +18,9 @@ class Menu extends Model
         'kategori',
         'gambar',
     ];
+
+     public function orderItems(): HasMany // <-- TAMBAHKAN METHOD INI
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

@@ -23,7 +23,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Kartu Total Menu -->
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
@@ -40,25 +39,17 @@
                 </div>
             </div>
         </div>
-
-        <!-- KARTU BARU: Total Pesanan -->
+        <!-- Kartu Total Pesanan -->
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <!-- Ikon Pesanan -->
-                        <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
+                        <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                Total Pesanan
-                            </dt>
-                            <dd class="text-3xl font-semibold text-gray-900">
-                                {{ $orderCount }}
-                            </dd>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Pesanan</dt>
+                            <dd class="text-3xl font-semibold text-gray-900">{{ $orderCount }}</dd>
                         </dl>
                     </div>
                 </div>
@@ -66,10 +57,25 @@
         </div>
     </div>
 
+    {{-- PANEL GRAFIK PESANAN MINGGUAN --}}
+    <div class="mt-8 bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+            <h3 class="text-lg font-medium text-gray-900">Pesanan dalam 7 Hari Terakhir</h3>
+            <div class="mt-4">
+                {{-- Data sekarang disimpan di atribut data-* --}}
+                <canvas 
+                    id="weeklyOrdersChart" 
+                    height="100"
+                    data-labels="{{ json_encode($chartLabels) }}"
+                    data-data="{{ json_encode($chartData) }}"
+                ></canvas>
+            </div>
+        </div>
+    </div>
+
     {{-- Grid untuk Panel Aktivitas Terbaru --}}
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        {{-- Panel Menu Terbaru --}}
+        <!-- Panel Menu Terbaru -->
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <h3 class="text-lg font-medium text-gray-900">Menu Terbaru Ditambahkan</h3>
@@ -108,8 +114,7 @@
                 </div>
             </div>
         </div>
-
-        {{-- Panel Pengguna Baru --}}
+        <!-- Panel Pengguna Baru -->
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <h3 class="text-lg font-medium text-gray-900">Pengguna Baru Bergabung</h3>
@@ -142,4 +147,46 @@
             </div>
         </div>
     </div>
+    
+    {{-- SCRIPT UNTUK MENGGAMBAR GRAFIK (DIPERBARUI) --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartCanvas = document.getElementById('weeklyOrdersChart');
+            if (chartCanvas) {
+                // Ambil data dari atribut data-*
+                const labels = JSON.parse(chartCanvas.dataset.labels || '[]');
+                const data = JSON.parse(chartCanvas.dataset.data || '[]');
+
+                const ctx = chartCanvas.getContext('2d');
+                const weeklyOrdersChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels, // Gunakan data yang sudah diparsing
+                        datasets: [{
+                            label: 'Jumlah Pesanan',
+                            data: data, // Gunakan data yang sudah diparsing
+                            backgroundColor: 'rgba(34, 211, 238, 0.6)', // Warna teal yang lebih cocok
+                            borderColor: 'rgba(13, 148, 136, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </x-layouts.admin>
