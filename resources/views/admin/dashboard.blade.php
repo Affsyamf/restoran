@@ -5,66 +5,40 @@
     </div>
 
     {{-- Grid untuk Kartu Statistik --}}
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         
         <!-- Kartu Total Pengguna -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Pengguna</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ $userCount }}</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
+        <div class="bg-white overflow-hidden shadow rounded-lg p-5">
+            <dt class="text-sm font-medium text-gray-500 truncate">Total Pengguna</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ $userCount }}</dd>
         </div>
+
         <!-- Kartu Total Menu -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Menu</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ $menuCount }}</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
+        <div class="bg-white overflow-hidden shadow rounded-lg p-5">
+            <dt class="text-sm font-medium text-gray-500 truncate">Total Menu</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ $menuCount }}</dd>
         </div>
+
         <!-- Kartu Total Pesanan -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Pesanan</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ $orderCount }}</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
+        <div class="bg-white overflow-hidden shadow rounded-lg p-5">
+            <dt class="text-sm font-medium text-gray-500 truncate">Total Pesanan</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ $orderCount }}</dd>
+        </div>
+
+        <!-- KARTU BARU: Total Pendapatan -->
+        <div class="bg-white overflow-hidden shadow rounded-lg p-5">
+            <dt class="text-sm font-medium text-gray-500 truncate">Total Pendapatan</dt>
+            <dd class="mt-1 text-3xl font-semibold text-green-600">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</dd>
         </div>
     </div>
 
-    {{-- PANEL GRAFIK PESANAN MINGGUAN --}}
+    {{-- PANEL GRAFIK PENDAPATAN MINGGUAN --}}
     <div class="mt-8 bg-white overflow-hidden shadow rounded-lg">
         <div class="p-5">
-            <h3 class="text-lg font-medium text-gray-900">Pesanan dalam 7 Hari Terakhir</h3>
+            <h3 class="text-lg font-medium text-gray-900">Pendapatan dalam 7 Hari Terakhir</h3>
             <div class="mt-4">
-                {{-- Data sekarang disimpan di atribut data-* --}}
                 <canvas 
-                    id="weeklyOrdersChart" 
+                    id="weeklyRevenueChart" 
                     height="100"
                     data-labels="{{ json_encode($chartLabels) }}"
                     data-data="{{ json_encode($chartData) }}"
@@ -75,7 +49,7 @@
 
     {{-- Grid untuk Panel Aktivitas Terbaru --}}
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Panel Menu Terbaru -->
+        {{-- Panel Menu Terbaru --}}
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <h3 class="text-lg font-medium text-gray-900">Menu Terbaru Ditambahkan</h3>
@@ -107,14 +81,9 @@
                         @endforelse
                     </ul>
                 </div>
-                <div class="mt-6">
-                    <a href="{{ route('admin.menus.index') }}" class="w-full block text-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                        Lihat Semua Menu
-                    </a>
-                </div>
             </div>
         </div>
-        <!-- Panel Pengguna Baru -->
+        {{-- Panel Pengguna Baru --}}
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <h3 class="text-lg font-medium text-gray-900">Pengguna Baru Bergabung</h3>
@@ -139,11 +108,6 @@
                         @endforelse
                     </ul>
                 </div>
-                <div class="mt-6">
-                    <a href="{{ route('admin.users.index') }}" class="w-full block text-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                        Lihat Semua Pengguna
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -151,23 +115,24 @@
     {{-- SCRIPT UNTUK MENGGAMBAR GRAFIK (DIPERBARUI) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const chartCanvas = document.getElementById('weeklyOrdersChart');
+            const chartCanvas = document.getElementById('weeklyRevenueChart');
             if (chartCanvas) {
-                // Ambil data dari atribut data-*
                 const labels = JSON.parse(chartCanvas.dataset.labels || '[]');
                 const data = JSON.parse(chartCanvas.dataset.data || '[]');
 
                 const ctx = chartCanvas.getContext('2d');
-                const weeklyOrdersChart = new Chart(ctx, {
-                    type: 'bar',
+                const weeklyRevenueChart = new Chart(ctx, {
+                    type: 'line',
                     data: {
-                        labels: labels, // Gunakan data yang sudah diparsing
+                        labels: labels,
                         datasets: [{
-                            label: 'Jumlah Pesanan',
-                            data: data, // Gunakan data yang sudah diparsing
-                            backgroundColor: 'rgba(34, 211, 238, 0.6)', // Warna teal yang lebih cocok
-                            borderColor: 'rgba(13, 148, 136, 1)',
-                            borderWidth: 1
+                            label: 'Pendapatan (Rp)',
+                            data: data,
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            borderColor: 'rgba(22, 163, 74, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
                         }]
                     },
                     options: {
@@ -175,13 +140,28 @@
                             y: {
                                 beginAtZero: true,
                                 ticks: {
-                                    stepSize: 1
+                                    // HAPUS stepSize: 1 dari sini
+                                    callback: function(value, index, values) {
+                                        return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                                    }
                                 }
                             }
                         },
                         plugins: {
-                            legend: {
-                                display: false
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += 'Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
                             }
                         }
                     }

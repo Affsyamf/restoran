@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Blade;
+use App\View\Composers\AdminLayoutComposer;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class ViewServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -20,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //  Blade::component('layouts.admin', 'admin-layout');
+        // Pastikan ini menunjuk ke view 'components.layouts.admin'
+        View::composer('components.layouts.admin', AdminLayoutComposer::class);
     }
 }
