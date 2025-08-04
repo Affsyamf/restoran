@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
@@ -47,7 +48,8 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        //
+        $order->load(['user', 'items.menu']);
+        return view('admin.orders.edit', ['order' => $order]);
     }
 
     /**
@@ -55,7 +57,12 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+         $validated = $request->validate([
+            'status' => ['required', Rule::in(['pending', 'processing', 'completed', 'cancelled'])],
+        ]);
+
+        $order->update($validated);
+        return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully.');
     }
 
     /**
