@@ -1,52 +1,70 @@
-    <x-layouts.guest>
-        <div class="bg-white">
-            <div class="pt-6">
-                <!-- Image gallery -->
-                <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
-                    <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-                        @if ($menu->gambar)
-                            <img src="{{ asset('storage/' . $menu->gambar) }}" alt="{{ $menu->nama_menu }}" class="h-full w-full object-cover object-center">
-                        @else
-                            <img src="https://placehold.co/800x600/CCCCCC/FFFFFF?text=Menu" alt="{{ $menu->nama_menu }}" class="h-full w-full object-cover object-center">
-                        @endif
+<x-layouts.guest>
+    <div class="bg-gray-50">
+        <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+            {{-- Grid Layout Utama (Gambar di Kiri, Info di Kanan) --}}
+            <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+                
+                {{-- Kolom Kiri: Gambar Menu --}}
+                <div class="flex flex-col gap-y-8">
+                    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg">
+                        <img src="{{ $menu->gambar ? asset('storage/' . $menu->gambar) : 'https://placehold.co/800x600/CCCCCC/FFFFFF?text=Menu' }}" alt="{{ $menu->nama_menu }}" class="h-full w-full object-cover object-center">
                     </div>
+                    {{-- Anda bisa menambahkan galeri gambar kecil di sini jika perlu --}}
                 </div>
 
-                <!-- Product info -->
-                <div class="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-                    <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{{ $menu->nama_menu }}</h1>
+                {{-- Kolom Kanan: Informasi Menu --}}
+                <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+                    {{-- Judul dan Rating --}}
+                    <div>
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $menu->nama_menu }}</h1>
+                        <div class="mt-3">
+                            <h2 class="sr-only">Ulasan Produk</h2>
+                            <div class="flex items-center">
+                                <x-star-rating :rating="$menu->reviews->avg('rating')" :count="$menu->reviews->count()" />
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Options -->
-                    <div class="mt-4 lg:row-span-3 lg:mt-0">
-                        <h2 class="sr-only">Product information</h2>
+                    {{-- Harga dan Tombol Pesan --}}
+                    <div class="mt-6">
                         <p class="text-3xl tracking-tight text-gray-900">Rp {{ number_format($menu->harga, 0, ',', '.') }}</p>
-
-                        <form class="mt-10" action="{{ route('cart.store', $menu->id) }}" method="POST">
+                        <form class="mt-6" action="{{ route('cart.store', $menu->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-teal-600 px-8 py-3 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">Pesan Sekarang</button>
+                            <button type="submit" class="flex w-full max-w-xs items-center justify-center rounded-md border border-transparent bg-teal-600 px-8 py-3 text-base font-medium text-white hover:bg-teal-700">Pesan Sekarang</button>
                         </form>
                     </div>
 
-                    <div class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-                        <!-- Description and details -->
-                        <div>
-                            <h3 class="sr-only">Description</h3>
-                            <div class="space-y-6">
-                                <p class="text-base text-gray-900">{{ $menu->deskripsi }}</p>
-                            </div>
+                    {{-- Deskripsi --}}
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h3 class="text-xl font-medium text-gray-900">Deskripsi</h3>
+                        <div class="mt-4 space-y-6">
+                            <p class="text-base text-gray-700">{{ $menu->deskripsi ?: 'Tidak ada deskripsi untuk menu ini.' }}</p>
                         </div>
+                    </div>
 
-                        <div class="mt-10">
-                            <h3 class="text-sm font-medium text-gray-900">Kategori</h3>
-                            <div class="mt-4">
-                                <p class="text-sm text-gray-600">{{ $menu->kategori }}</p>
-                            </div>
+                    {{-- Ulasan Pelanggan --}}
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h3 class="text-xl font-medium text-gray-900">Ulasan Pelanggan</h3>
+                        <div class="mt-6 flow-root">
+                            @forelse($menu->reviews as $review)
+                                <div class="py-6 border-t border-gray-200">
+                                    <div class="flex items-center">
+                                        <div>
+                                            <h4 class="text-sm font-bold text-gray-900">{{ $review->user->name }}</h4>
+                                            <div class="mt-1 flex items-center">
+                                                <x-star-rating :rating="$review->rating" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-4 text-base text-gray-600">{{ $review->comment }}</p>
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-500 mt-4">Belum ada ulasan untuk menu ini.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </x-layouts.guest>
-    
+    </div>
+</x-layouts.guest>

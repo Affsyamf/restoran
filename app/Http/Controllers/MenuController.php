@@ -54,7 +54,8 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        return view('menus.show', ['menu' => $menu]);
+       $menu->load('reviews.user');
+        return view('menu.show', ['menu' => $menu]);
     }
 
     /**

@@ -8,8 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
+
+     public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 

@@ -19,7 +19,8 @@ class CartController extends Controller
         // Mulai query builder, dan hitung total penjualan untuk setiap menu
         $query = Menu::withCount(['orderItems as total_sold' => function ($query) {
             $query->select(DB::raw('sum(jumlah)'));
-        }]);
+        }])
+         ->withAvg('reviews', 'rating');
 
         // Terapkan filter pencarian jika ada
         $query->when($request->search, function ($q, $search) {
