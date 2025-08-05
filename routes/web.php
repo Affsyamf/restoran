@@ -11,6 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Api\MenuController as ApiMenuController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -70,6 +71,7 @@ Route::get('/my-orders', [UserOrderController::class, 'index'])->middleware('aut
 // ROUTE BARU: Menyimpan ulasan baru dari pengguna
 Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
 
+Route::get('/api/menus', [ApiMenuController::class, 'index'])->name('api.menus.index');
 
 
 

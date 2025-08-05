@@ -13,58 +13,13 @@ class CartController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil semua kategori unik untuk tombol filter
-        $categories = Menu::select('kategori')->distinct()->pluck('kategori');
-
-        // Mulai query builder, dan hitung total penjualan untuk setiap menu
-        $query = Menu::withCount(['orderItems as total_sold' => function ($query) {
-            $query->select(DB::raw('sum(jumlah)'));
-        }])
-         ->withAvg('reviews', 'rating');
-
-        // Terapkan filter pencarian jika ada
-        $query->when($request->search, function ($q, $search) {
-            return $q->where('nama_menu', 'like', "%{$search}%");
-        });
-
-        // Terapkan filter kategori jika ada
-        $query->when($request->category, function ($q, $category) {
-            return $q->where('kategori', $category);
-        });
-
-        // Terapkan filter harga minimum jika ada
-        $query->when($request->min_price, function ($q, $min_price) {
-            return $q->where('harga', '>=', $min_price);
-        });
-
-        // Terapkan filter harga maksimum jika ada
-        $query->when($request->max_price, function ($q, $max_price) {
-            return $q->where('harga', '<=', $max_price);
-        });
-
-        // Terapkan penyortiran (diperbarui)
-        $sort = $request->input('sort');
-        switch ($sort) {
-            case 'latest':
-                $query->latest();
-                break;
-            case 'bestseller':
-                $query->orderBy('total_sold', 'desc');
-                break;
-            default:
-                // Tidak ada urutan spesifik, ini adalah opsi "standar"
-                break;
-        }
-
-        // Ambil hasil akhir dengan paginasi
-        $menus = $query->paginate(12)->withQueryString();
+       $categories = Menu::select('kategori')->distinct()->pluck('kategori');
 
         return view('menu.index', [
-            'menus' => $menus,
             'categories' => $categories,
         ]);
-    }
 
+    }
     /**
      * Menambahkan item menu ke dalam keranjang (session).
      */
