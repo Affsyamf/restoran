@@ -15,11 +15,34 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                     {{-- LINK BARU: Menu --}}
+                    <x-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.*')">
+                        {{ __('Pesan Menu') }}
+                    </x-nav-link>
+
+                    {{-- LINK BARU: Riwayat Pesanan --}}
+                    <x-nav-link :href="route('my-orders.index')" :active="request()->routeIs('my-orders.index')">
+                        {{ __('Riwayat Pesanan') }}
+                    </x-nav-link>
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+               
+                 {{-- Tambahkan ikon keranjang di sini juga --}}
+                <a href="{{ route('cart.show') }}" class="relative mr-4">
+                    <svg class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    @if(session('cart') && count(session('cart')) > 0)
+                        <span class="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                            {{ count(session('cart')) }}
+                        </span>
+                    @endif
+                </a>
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -69,6 +92,15 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            {{-- LINK BARU (RESPONSIVE): Menu --}}
+            <x-responsive-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.*')">
+                {{ __('Pesan Menu') }}
+            </x-responsive-nav-link>
+
+            {{-- LINK BARU (RESPONSIVE): Riwayat Pesanan --}}
+            <x-responsive-nav-link :href="route('my-orders.index')" :active="request()->routeIs('my-orders.index')">
+                {{ __('Riwayat Pesanan') }}
             </x-responsive-nav-link>
         </div>
 
