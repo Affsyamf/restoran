@@ -1,6 +1,6 @@
 <x-layouts.guest>
     <div class="bg-white">
-        {{-- Inisialisasi Alpine.js --}}
+        {{-- Inisialisasi Alpine.js di sini --}}
         <div 
             x-data="{
                 menus: [],
@@ -17,6 +17,8 @@
                 
                 fetchMenus() {
                     this.isLoading = true;
+                    // Reset page to 1 on new filter, but not on pagination click
+                    if (this.filters.page === undefined) this.filters.page = 1;
                     const params = new URLSearchParams(this.filters).toString();
                     fetch(`/api/menus?${params}`)
                         .then(response => response.json())
@@ -28,7 +30,7 @@
                 },
 
                 changePage(page) {
-                    if (page) {
+                    if (page && page >= 1 && page <= this.pagination.last_page) {
                         this.filters.page = page;
                         this.fetchMenus();
                     }
@@ -43,7 +45,7 @@
                 <p class="mt-4 max-w-2xl mx-auto text-base text-gray-500">Temukan hidangan favorit Anda atau coba sesuatu yang baru.</p>
             </div>
 
-            {{-- FORM FILTER YANG DIKEMBALIKAN --}}
+            {{-- Form Filter --}}
             <div class="mt-12 p-6 bg-gray-50 rounded-lg border">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="md:col-span-2">
@@ -85,9 +87,8 @@
                 </div>
             @endif
 
-            {{-- Daftar Menu sekarang dirender oleh Alpine.js --}}
+            {{-- Daftar Menu --}}
             <div class="mt-8 relative">
-                {{-- Indikator Loading --}}
                 <div x-show="isLoading" class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                     <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-teal-600"></div>
                 </div>
@@ -105,14 +106,11 @@
                                         <p class="text-sm font-medium text-gray-900" x-text="`Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}`"></p>
                                     </div>
                                     <p class="mt-1 text-sm text-gray-500" x-text="menu.kategori"></p>
-                                    
                                     <div class="mt-2 flex items-center">
                                         <template x-if="menu.reviews_count > 0">
                                             <div class="flex items-center">
                                                 <template x-for="i in 5" :key="i">
-                                                    <svg :class="i <= Math.round(menu.reviews_avg_rating) ? 'text-yellow-400' : 'text-gray-300'" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.175 0l-3.368 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.06 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" />
-                                                    </svg>
+                                                    <svg :class="i <= Math.round(menu.reviews_avg_rating) ? 'text-yellow-400' : 'text-gray-300'" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.175 0l-3.368 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.06 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" /></svg>
                                                 </template>
                                                 <p class="ml-2 text-xs text-gray-500" x-text="`${menu.reviews_count} ulasan`"></p>
                                             </div>
@@ -123,15 +121,13 @@
                                     </div>
                                 </div>
                             </a>
-                            <form :action="`/cart/add/${menu.id}`" method="POST" class="mt-4">
-                                @csrf
-                                <button type="submit" class="w-full rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-teal-700">
+                            <div class="mt-4">
+                                <button @click.prevent="addToCart(menu.id)" type="button" class="w-full rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-teal-700">
                                     Pesan
                                 </button>
-                            </form>
+                            </div>
                         </div>
                     </template>
-                    
                     <template x-if="!isLoading && menus.length === 0">
                         <div class="col-span-full text-center py-12">
                             <p class="text-lg text-gray-500">Menu yang Anda cari tidak ditemukan.</p>

@@ -13,7 +13,7 @@ use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\MenuController as ApiMenuController;
-
+use App\Http\Controllers\CartController as ApiCartController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -76,6 +76,7 @@ Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')-
 
 Route::get('/api/menus', [ApiMenuController::class, 'index'])->name('api.menus.index');
 
-
+// ROUTE BARU UNTUK API MENAMBAH ITEM KE KERANJANG
+    Route::post('/api/cart/add/{menu}', [ApiCartController::class, 'store'])->middleware('auth')->name('api.cart.store');
 
 require __DIR__.'/auth.php';
