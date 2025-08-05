@@ -11,7 +11,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\MenuController as ApiMenuController;
+
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -38,6 +40,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('menus', MenuController::class);
     Route::resource('users', UserController::class);
     Route::resource('orders', OrderController::class);
+    Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
     // Nama lengkap route ini sekarang adalah 'admin.dashboard'
 });
 

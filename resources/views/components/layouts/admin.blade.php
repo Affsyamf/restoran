@@ -35,6 +35,11 @@
                             </span>
                         @endif
                     </a>
+
+                    {{-- manajemen ulasan --}}
+                    <a href="{{ route('admin.reviews.index') }}" class="mt-1 flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
+                        Manajemen Ulasan
+                    </a>
                 </nav>
             </div>
         </div>
