@@ -9,7 +9,6 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-{{-- "Otak" Alpine.js sekarang menjadi atribut dari tag <body> --}}
 <body 
     x-data="{ 
         cartCount: {{ count(session('cart', [])) }},
@@ -66,14 +65,11 @@
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
-                {{-- Logo --}}
                 <div class="flex-1 md:flex md:items-center md:gap-12">
                     <a class="block text-teal-600 font-bold text-xl" href="/">
                         RestoranEnak
                     </a>
                 </div>
-
-                {{-- Menu Navigasi --}}
                 <div class="md:flex md:items-center md:gap-12">
                     <nav aria-label="Global" class="hidden md:block">
                         <ul class="flex items-center gap-6 text-sm">
@@ -82,9 +78,7 @@
                             <li><a class="text-gray-500 transition hover:text-gray-500/75" href="/#contact">Kontak</a></li>
                         </ul>
                     </nav>
-
                     <div class="flex items-center gap-4">
-                        {{-- Ikon Keranjang --}}
                         <a href="{{ route('cart.show') }}" class="relative">
                             <svg class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -94,8 +88,6 @@
                                   class="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                             </span>
                         </a>
-
-                        {{-- Tombol Login/Register atau Dashboard --}}
                         <div class="sm:flex sm:gap-4">
                             @auth
                                 <a class="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow" href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}">
@@ -118,12 +110,10 @@
         </div>
     </nav>
 
-    {{-- KONTEN UTAMA HALAMAN --}}
     <main class="flex-grow">
         {{ $slot }}
     </main>
 
-    {{-- FOOTER --}}
     <footer class="bg-gray-900 text-white">
         <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
             <div class="sm:flex sm:items-center sm:justify-between">
@@ -148,6 +138,7 @@
         x-transition:leave-end="opacity-0"
         class="fixed bottom-5 right-5 w-full max-w-xs p-4 bg-white border border-gray-200 rounded-lg shadow-lg"
         style="display: none;"
+        x-cloak
     >
         <div class="flex items-start">
             <div class="flex-shrink-0">

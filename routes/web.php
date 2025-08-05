@@ -14,6 +14,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\MenuController as ApiMenuController;
 use App\Http\Controllers\CartController as ApiCartController;
+use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -41,6 +42,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
+    // TAMBAHKAN DUA ROUTE INI
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
     // Nama lengkap route ini sekarang adalah 'admin.dashboard'
 });
 
@@ -77,6 +81,13 @@ Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')-
 Route::get('/api/menus', [ApiMenuController::class, 'index'])->name('api.menus.index');
 
 // ROUTE BARU UNTUK API MENAMBAH ITEM KE KERANJANG
-    Route::post('/api/cart/add/{menu}', [ApiCartController::class, 'store'])->middleware('auth')->name('api.cart.store');
+Route::post('/api/cart/add/{menu}', [ApiCartController::class, 'store'])->middleware('auth')->name('api.cart.store');
+
+
+// route sudebar CMS
+ // ROUTE BARU UNTUK PENGATURAN SITUS
+Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+
 
 require __DIR__.'/auth.php';

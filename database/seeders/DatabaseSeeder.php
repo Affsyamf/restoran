@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
 
         $this->call([
+            SettingSeeder::class,
             Menuseeder::class,
             OrderSeeder::class,
         ]);

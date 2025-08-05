@@ -122,9 +122,13 @@
                                 </div>
                             </a>
                             <div class="mt-4">
-                                <button @click.prevent="addToCart(menu.id)" type="button" class="w-full rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-teal-700">
-                                    Pesan
-                                </button>
+                                <button 
+                    @click.prevent="addToCart(menu.id, $event)"
+                    type="button" 
+                    class="w-full rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-teal-700"
+                >
+                    Pesan
+                </button>
                             </div>
                         </div>
                     </template>
