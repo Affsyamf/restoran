@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\MenuController as ApiMenuController;
 use App\Http\Controllers\CartController as ApiCartController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Api\WebhookController;
+use App\Http\Controllers\UserDashboardController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -24,9 +26,8 @@ Route::get('/', function () {
 });
 
 // Ini adalah dashboard untuk user biasa (bawaan Breeze)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+ Route::get('/dashboard', [UserDashboardController::class, 'index'])
+        ->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route ini untuk SEMUA user yang sudah login (admin & biasa)
 Route::middleware('auth')->group(function () {
@@ -90,5 +91,7 @@ Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('c
 Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
 Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 
+// ROUTE BARU UNTUK MENANGANI NOTIFIKASI DARI MIDTRANS
+Route::post('/api/midtrans-webhook', [WebhookController::class, 'handle'])->name('midtrans.webhook');
 
 require __DIR__.'/auth.php';
