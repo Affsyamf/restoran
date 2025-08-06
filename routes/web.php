@@ -17,6 +17,7 @@ use App\Http\Controllers\CartController as ApiCartController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\Admin\PromoCodeController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
+    Route::resource('promo-codes', PromoCodeController::class);
     // TAMBAHKAN DUA ROUTE INI
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
