@@ -83,6 +83,7 @@ Route::get('/api/menus', [ApiMenuController::class, 'index'])->name('api.menus.i
 // ROUTE BARU UNTUK API MENAMBAH ITEM KE KERANJANG
 Route::post('/api/cart/add/{menu}', [ApiCartController::class, 'store'])->middleware('auth')->name('api.cart.store');
 
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
 // route sudebar CMS
  // ROUTE BARU UNTUK PENGATURAN SITUS

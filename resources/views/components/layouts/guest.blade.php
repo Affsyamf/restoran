@@ -7,6 +7,11 @@
     
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    {{-- SCRIPT BARU: Midtrans Snap.js --}}
+    <script type="text/javascript"
+      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      data-client-key="{{ config('midtrans.client_key') }}"></script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body 
