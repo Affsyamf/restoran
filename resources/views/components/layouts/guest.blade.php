@@ -7,25 +7,50 @@
     
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    {{-- SCRIPT BARU: Midtrans Snap.js --}}
+    {{-- Script Penting: Midtrans Snap.js --}}
     <script type="text/javascript"
       src="https://app.sandbox.midtrans.com/snap/snap.js"
       data-client-key="{{ config('midtrans.client_key') }}"></script>
-
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body 
     x-data="{ 
+        // State Global
         cartCount: {{ count(session('cart', [])) }},
         showToast: false,
         toastMessage: '',
+        isLoading: false,
 
+        // State Khusus Halaman Keranjang
+        cart: {},
+        promoCode: '',
+        appliedPromo: null,
+        promoMessage: '',
+        promoError: '',
+
+        // Computed Properties untuk Keranjang
+        get total() {
+            if (Object.keys(this.cart).length === 0) return 0;
+            return Object.values(this.cart).reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
+        },
+        get discountAmount() {
+            if (!this.appliedPromo) return 0;
+            if (this.appliedPromo.type === 'percent') {
+                return (this.total * this.appliedPromo.value) / 100;
+            }
+            return Math.min(this.appliedPromo.value, this.total);
+        },
+        get newTotal() {
+            return this.total - this.discountAmount;
+        },
+
+        // Fungsi Global
         showSuccessToast(message) {
             this.toastMessage = message;
             this.showToast = true;
-            setTimeout(() => this.showToast = false, 3000); // Sembunyikan setelah 3 detik
+            setTimeout(() => this.showToast = false, 3000);
         },
-
         addToCart(menuId, event) {
             const button = event.currentTarget;
             const originalText = button.innerHTML;
@@ -41,7 +66,7 @@
                 }
             })
             .then(response => {
-                if (response.status === 401) { // Jika tidak terautentikasi
+                if (response.status === 401) {
                     window.location.href = '{{ route('login') }}';
                     return Promise.reject('Unauthenticated');
                 }
@@ -54,14 +79,53 @@
                 }
             })
             .catch(error => {
-                if (error !== 'Unauthenticated') {
-                    console.error('Error:', error);
-                }
+                if (error !== 'Unauthenticated') { console.error('Error:', error); }
             })
             .finally(() => {
                 button.innerHTML = originalText;
                 button.disabled = false;
             });
+        },
+
+        // Fungsi Halaman Keranjang
+        applyPromoCode() {
+            this.promoError = ''; this.promoMessage = ''; this.isLoading = true;
+            fetch('{{ route('api.promo-codes.apply') }}', {
+                method: 'POST',
+                headers: {'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'), 'Accept': 'application/json', 'Content-Type': 'application/json'},
+                body: JSON.stringify({ code: this.promoCode })
+            })
+            .then(response => response.json().then(data => ({ status: response.status, body: data })))
+            .then(({ status, body }) => {
+                if (status >= 400) {
+                    this.promoError = body.message; this.appliedPromo = null; this.promoCode = '';
+                    fetch('{{ route('api.promo-codes.remove') }}', { method: 'POST', headers: {'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')} });
+                } else {
+                    this.promoMessage = body.message; this.appliedPromo = body.promo_code;
+                }
+            })
+            .finally(() => this.isLoading = false);
+        },
+        handleCheckout() {
+            this.isLoading = true;
+            fetch('{{ route('checkout.store') }}', {
+                method: 'POST',
+                headers: {'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'), 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.snap_token) {
+                    snap.pay(data.snap_token, {
+                        onSuccess: (result) => { window.location.href = '{{ route('checkout.success') }}'; },
+                        onPending: (result) => { window.location.href = '{{ route('my-orders.index') }}'; },
+                        onError: (result) => { alert('Pembayaran gagal!'); this.isLoading = false; },
+                        onClose: () => { this.isLoading = false; }
+                    });
+                } else {
+                    alert(data.error || 'Terjadi kesalahan.'); this.isLoading = false;
+                }
+            })
+            .catch(error => { console.error('Error:', error); this.isLoading = false; });
         }
     }"
     class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">

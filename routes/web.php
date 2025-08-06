@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\PromoCodeController;
+use App\Http\Controllers\Api\PromoCodeController as ApiPromoCodeController;
 
 Route::get('/', function () {
     $featuredMenus = Menu::latest()->take(4)->get();
@@ -85,6 +86,9 @@ Route::get('/api/menus', [ApiMenuController::class, 'index'])->name('api.menus.i
 
 // ROUTE BARU UNTUK API MENAMBAH ITEM KE KERANJANG
 Route::post('/api/cart/add/{menu}', [ApiCartController::class, 'store'])->middleware('auth')->name('api.cart.store');
+
+Route::post('/api/promo-codes/apply', [ApiPromoCodeController::class, 'apply'])->middleware('auth')->name('api.promo-codes.apply');
+Route::post('/api/promo-codes/remove', [ApiPromoCodeController::class, 'remove'])->middleware('auth')->name('api.promo-codes.remove');
 
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
