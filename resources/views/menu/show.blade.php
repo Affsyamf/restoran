@@ -9,6 +9,12 @@
                     <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg">
                         <img src="{{ $menu->gambar ? asset('storage/' . $menu->gambar) : 'https://placehold.co/800x600/CCCCCC/FFFFFF?text=Menu' }}" alt="{{ $menu->nama_menu }}" class="h-full w-full object-cover object-center">
                     </div>
+
+                    @if(!$menu->is_available)
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                            <span class="text-white font-bold text-2xl bg-red-600 px-6 py-2 rounded-full">HABIS</span>
+                        </div>
+                    @endif
                     {{-- Anda bisa menambahkan galeri gambar kecil di sini jika perlu --}}
                 </div>
 
