@@ -9,10 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Menu extends Model
 {
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
+    
 
     //
     use HasFactory;
@@ -23,9 +20,22 @@ class Menu extends Model
         'harga',
         'kategori',
         'gambar',
+        'is_available',
     ];
 
-     public function orderItems(): HasMany // <-- TAMBAHKAN METHOD INI
+    protected function casts(): array
+        {
+            return [
+                'is_available' => 'boolean', 
+            ];
+        }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+     public function orderItems(): HasMany 
     {
         return $this->hasMany(OrderItem::class);
     }

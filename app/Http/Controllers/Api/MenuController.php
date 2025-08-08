@@ -11,6 +11,8 @@ class MenuController extends Controller
 {
     public function index(Request $request)
     {
+        $query = Menu::query()->where('is_available', true);
+        
         $query = Menu::query()
             ->withCount(['orderItems as total_sold' => function ($query) {
                 $query->select(DB::raw('sum(jumlah)'));

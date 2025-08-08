@@ -99,4 +99,17 @@ class MenuController extends Controller
         $menu->delete();
         return redirect()->route('admin.menus.index')->with('success', 'Menu deleted successfully.');
     }
+
+     public function toggleAvailability(Menu $menu)
+    {
+        // Ubah nilai boolean (jika true jadi false, jika false jadi true)
+        $menu->is_available = !$menu->is_available;
+        $menu->save();
+
+        // Kembalikan respons JSON yang menandakan sukses
+        return response()->json([
+            'success' => true,
+            'is_available' => $menu->is_available,
+        ]);
+    }
 }

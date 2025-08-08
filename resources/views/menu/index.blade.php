@@ -96,39 +96,51 @@
                 <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     <template x-for="menu in menus" :key="menu.id">
                         <div class="group">
-                            <a :href="`/menu/${menu.id}`">
+                            <a :href="`/menu/${menu.id}`" class="relative block">
                                 <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                                    <img :src="menu.gambar ? `/storage/${menu.gambar}` : `https://placehold.co/400x400/CCCCCC/FFFFFF?text=Menu`" :alt="menu.nama_menu" class="h-full w-full object-cover object-center">
+                                    <img :src="menu.gambar ? `/storage/${menu.gambar}` : `https://placehold.co/400x400/CCCCCC/FFFFFF?text=Menu`" :alt="menu.nama_menu" 
+                                         class="h-full w-full object-cover object-center transition-all"
+                                         :class="{ 'grayscale': !menu.is_available }">
                                 </div>
-                                <div class="mt-4">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-sm text-gray-700" x-text="menu.nama_menu"></h3>
-                                        <p class="text-sm font-medium text-gray-900" x-text="`Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}`"></p>
+                                <template x-if="!menu.is_available">
+                                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-md">
+                                        <span class="text-white font-bold text-lg bg-red-600 px-4 py-1 rounded-full">HABIS</span>
                                     </div>
-                                    <p class="mt-1 text-sm text-gray-500" x-text="menu.kategori"></p>
-                                    <div class="mt-2 flex items-center">
-                                        <template x-if="menu.reviews_count > 0">
-                                            <div class="flex items-center">
-                                                <template x-for="i in 5" :key="i">
-                                                    <svg :class="i <= Math.round(menu.reviews_avg_rating) ? 'text-yellow-400' : 'text-gray-300'" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.175 0l-3.368 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.06 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" /></svg>
-                                                </template>
-                                                <p class="ml-2 text-xs text-gray-500" x-text="`${menu.reviews_count} ulasan`"></p>
-                                            </div>
-                                        </template>
-                                        <template x-if="menu.reviews_count === 0">
-                                            <p class="text-xs text-gray-500">Belum ada ulasan</p>
-                                        </template>
-                                    </div>
-                                </div>
+                                </template>
                             </a>
                             <div class="mt-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-sm text-gray-700" x-text="menu.nama_menu"></h3>
+                                    <p class="text-sm font-medium text-gray-900" x-text="`Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}`"></p>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500" x-text="menu.kategori"></p>
+                                <div class="mt-2 flex items-center">
+                                    <template x-if="menu.reviews_count > 0">
+                                        <div class="flex items-center">
+                                            <template x-for="i in 5" :key="i">
+                                                <svg :class="i <= Math.round(menu.reviews_avg_rating) ? 'text-yellow-400' : 'text-gray-300'" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.175 0l-3.368 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.06 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z" /></svg>
+                                            </template>
+                                            <p class="ml-2 text-xs text-gray-500" x-text="`${menu.reviews_count} ulasan`"></p>
+                                        </div>
+                                    </template>
+                                    <template x-if="menu.reviews_count === 0">
+                                        <p class="text-xs text-gray-500">Belum ada ulasan</p>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="mt-4">
                                 <button 
-                    @click.prevent="addToCart(menu.id, $event)"
-                    type="button" 
-                    class="w-full rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-teal-700"
-                >
-                    Pesan
-                </button>
+                                    @click.prevent="addToCart(menu.id, $event)"
+                                    type="button" 
+                                    class="w-full rounded-md px-5 py-2.5 text-sm font-medium text-white shadow transition"
+                                    :disabled="!menu.is_available"
+                                    :class="{
+                                        'bg-teal-600 hover:bg-teal-700': menu.is_available,
+                                        'bg-gray-400 cursor-not-allowed': !menu.is_available
+                                    }"
+                                >
+                                    <span x-text="menu.is_available ? 'Pesan' : 'Habis'"></span>
+                                </button>
                             </div>
                         </div>
                     </template>

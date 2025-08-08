@@ -100,4 +100,5 @@ Route::post('/settings', [SettingController::class, 'store'])->name('settings.st
 // ROUTE BARU UNTUK MENANGANI NOTIFIKASI DARI MIDTRANS
 Route::post('/api/midtrans-webhook', [WebhookController::class, 'handle'])->name('midtrans.webhook');
 
+Route::patch('/menus/{menu}/toggle-availability', [MenuController::class, 'toggleAvailability'])->name('admin.menus.toggleAvailability');
 require __DIR__.'/auth.php';
