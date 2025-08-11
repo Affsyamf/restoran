@@ -37,6 +37,7 @@
         <div class="p-5">
             <h3 class="text-lg font-medium text-gray-900">Pendapatan dalam 7 Hari Terakhir</h3>
             <div class="mt-4">
+                {{-- Biarkan canvas ini apa adanya. Data akan diambil oleh app.js --}}
                 <canvas 
                     id="weeklyRevenueChart" 
                     height="100"
@@ -47,7 +48,7 @@
         </div>
     </div>
 
-    {{-- Grid untuk Panel Aktivitas Terbaru --}}
+    {{-- Grid untuk Panel Aktivitas Terbaru (Kode Anda yang lain tetap di sini) --}}
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Panel Menu Terbaru --}}
         <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -111,62 +112,4 @@
             </div>
         </div>
     </div>
-    
-    {{-- SCRIPT UNTUK MENGGAMBAR GRAFIK (DIPERBARUI) --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const chartCanvas = document.getElementById('weeklyRevenueChart');
-            if (chartCanvas) {
-                const labels = JSON.parse(chartCanvas.dataset.labels || '[]');
-                const data = JSON.parse(chartCanvas.dataset.data || '[]');
-
-                const ctx = chartCanvas.getContext('2d');
-                const weeklyRevenueChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Pendapatan (Rp)',
-                            data: data,
-                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                            borderColor: 'rgba(22, 163, 74, 1)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    // HAPUS stepSize: 1 dari sini
-                                    callback: function(value, index, values) {
-                                        return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                    }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += 'Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y);
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </x-layouts.admin>

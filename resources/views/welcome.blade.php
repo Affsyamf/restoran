@@ -24,7 +24,7 @@
         <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
                 <div class="relative h-64 overflow-hidden rounded-lg sm:h-80 lg:h-full">
-                    <img alt="Interior Restoran" src="https://placehold.co/800x600/555555/FFFFFF?text=Suasana+Restoran" class="absolute inset-0 h-full w-full object-cover">
+                    <img alt="Interior Restoran" src="https://media.suara.com/pictures/970x544/2021/08/28/41992-restoran-merah-putih-httpsmerahputihbalicom.jpg" class="absolute inset-0 h-full w-full object-cover">
                 </div>
                 <div class="lg:py-16">
                     <h2 class="text-3xl font-bold sm:text-4xl">{{ $settings['about_title'] ?? 'Judul Tentang Kami' }}</h2>
